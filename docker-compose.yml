@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+
+  db_dev:
+    container_name: db_dev
+    image: mongo:4
+    #ports:
+    #  - 127.0.0.1:27017-27019:27017-27019
+    expose:
+      - 27017-27019
+    volumes:
+      - .data/mongodb:/data/db
+
+  changeme_dev:
+    build:
+      context: ./
+    image: changeme_go
+    volumes:
+        - ./:/home/changeme/app
+    entrypoint: bash init-start.sh
+    restart: on-failure
+    environment:
+      DB_HOST: db_dev
+      DB_PORT: 27017
+      DB_NAME: changeme-dev
